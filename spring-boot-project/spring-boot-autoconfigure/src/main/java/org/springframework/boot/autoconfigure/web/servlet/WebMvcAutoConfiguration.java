@@ -189,8 +189,8 @@ public class WebMvcAutoConfiguration {
 		final ResourceHandlerRegistrationCustomizer resourceHandlerRegistrationCustomizer;
 
 		public WebMvcAutoConfigurationAdapter(ResourceProperties resourceProperties, WebMvcProperties mvcProperties,
-				ListableBeanFactory beanFactory, ObjectProvider<HttpMessageConverters> messageConvertersProvider,
-				ObjectProvider<ResourceHandlerRegistrationCustomizer> resourceHandlerRegistrationCustomizerProvider) {
+											  ListableBeanFactory beanFactory, ObjectProvider<HttpMessageConverters> messageConvertersProvider,
+											  ObjectProvider<ResourceHandlerRegistrationCustomizer> resourceHandlerRegistrationCustomizerProvider) {
 			this.resourceProperties = resourceProperties;
 			this.mvcProperties = mvcProperties;
 			this.beanFactory = beanFactory;
@@ -295,25 +295,42 @@ public class WebMvcAutoConfiguration {
 			ApplicationConversionService.addBeans(registry, this.beanFactory);
 		}
 
+		/**
+		 * 静态内容资源处理映射
+		 * @param registry
+		 */
 		@Override
 		public void addResourceHandlers(ResourceHandlerRegistry registry) {
+			// 检查是否允许添加默认的资源处理器映射，默认为true
+			// 如果自定义静态资源映射，那么需要在配置文件中设置spring.resources.addMappings=false
+			// 这样SpringBoot就不会加载默认的资源配置映射了
 			if (!this.resourceProperties.isAddMappings()) {
+				// 如果返回 false，则直接输出日志提示默认资源处理被禁用，方法结束
 				logger.debug("Default resource handling disabled");
 				return;
 			}
+			// 获取缓存的时间周期-单位秒，从resourceProperties的缓存配置中获取的
 			Duration cachePeriod = this.resourceProperties.getCache().getPeriod();
+			// 获取了CacheControl对象（cacheControl），这个对象包含了缓存控制相关的配置信息，也是从resourceProperties的缓存配置中获取的
 			CacheControl cacheControl = this.resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
+			// 判断是否存在 “/webjars/**"这样的映射，如果不存在会添加
+			// 为 Webjars内容 提供了一个特殊情况。 默认情况下，任何路径为 /webjars/** 的资源，如果是以Webjars格式打包的，将从jar文件中提供
+			// 访问jar包中/META-INF/resources/webjars/路径的资源都可以简化为/webjars/**方式了
 			if (!registry.hasMappingForPattern("/webjars/**")) {
 				customizeResourceHandlerRegistration(registry.addResourceHandler("/webjars/**")
 						.addResourceLocations("classpath:/META-INF/resources/webjars/")
 						.setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
 			}
+			// 从mvcProperties配置中读取，spring.mvc.staticPathPattern  默认为  /**
 			String staticPathPattern = this.mvcProperties.getStaticPathPattern();
+			// 判断是否存在 "/**" 这样的映射，如果不存在则添加默认的
+			// ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
 			if (!registry.hasMappingForPattern(staticPathPattern)) {
 				customizeResourceHandlerRegistration(registry.addResourceHandler(staticPathPattern)
 						.addResourceLocations(getResourceLocations(this.resourceProperties.getStaticLocations()))
 						.setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
 			}
+			// 同时也会为 “/webjars/**” 和  “/**” 的映射设置缓存时间周期和其他缓存控制信息
 		}
 
 		private Integer getSeconds(Duration cachePeriod) {
@@ -393,9 +410,17 @@ public class WebMvcAutoConfiguration {
 					resourceUrlProvider);
 		}
 
+		/**
+		 * 欢迎页面配置
+		 * @param applicationContext
+		 * @param mvcConversionService
+		 * @param mvcResourceUrlProvider
+		 * @return
+		 */
 		@Bean
 		public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
-				FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
+																   FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
+			// 欢迎页面的映射配置   支持静态和模板文件。如果静态和模板化索引页面都可用，则首选静态页面。
 			WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(
 					new TemplateAvailabilityProviders(applicationContext), applicationContext, getWelcomePage(),
 					this.mvcProperties.getStaticPathPattern());
@@ -403,8 +428,14 @@ public class WebMvcAutoConfiguration {
 			return welcomePageHandlerMapping;
 		}
 
+		/**
+		 * 查找所有的存在欢迎页面的路径
+		 * @return
+		 */
 		private Optional<Resource> getWelcomePage() {
+			// locations = {classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,/}
 			String[] locations = getResourceLocations(this.resourceProperties.getStaticLocations());
+			// this::getIndexHtml，以locations位置作为参数调用getIndexHtml方法，去找对应的index.html，找到可用的第一个
 			return Arrays.stream(locations).map(this::getIndexHtml).filter(this::isReadable).findFirst();
 		}
 

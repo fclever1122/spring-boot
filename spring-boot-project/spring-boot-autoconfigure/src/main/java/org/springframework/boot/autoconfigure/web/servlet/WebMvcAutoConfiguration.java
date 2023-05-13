@@ -256,14 +256,26 @@ public class WebMvcAutoConfiguration {
 			return resolver;
 		}
 
+		/**
+		 * 加载条件：
+		 * 		1 只有在应用上下文中存在 ViewResolver bean 时才会被加载。
+		 * 		2 在应用上下文中不存在名称为 "viewResolver" 的 ContentNegotiatingViewResolver bean 的情况下才会进行条件判断和加载。
+		 *
+		 * @param beanFactory
+		 * @return
+		 */
 		@Bean
 		@ConditionalOnBean(ViewResolver.class)
 		@ConditionalOnMissingBean(name = "viewResolver", value = ContentNegotiatingViewResolver.class)
 		public ContentNegotiatingViewResolver viewResolver(BeanFactory beanFactory) {
+			// 创建ContentNegotiatingViewResolver，也是满足条件是返回的视图解析器
 			ContentNegotiatingViewResolver resolver = new ContentNegotiatingViewResolver();
+			// 使用了 BeanFactory 来获取 ContentNegotiationManager 实例
 			resolver.setContentNegotiationManager(beanFactory.getBean(ContentNegotiationManager.class));
 			// ContentNegotiatingViewResolver uses all the other view resolvers to locate
 			// a view so it should have a high precedence
+			// ContentNegotiatingViewResolver使用所有的其他视图解析器来定位一个视图，所以它应该有一个高的优先级
+			// Integer.MIN_VALUE 数值越小优先级越高
 			resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
 			return resolver;
 		}

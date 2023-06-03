@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+  <title>Thymeleaf Fragment Expression Example</title>
+  </head>
+  <body>
+    <div th:replace="~{header.html :: headerFragment}"></div>
+    <div th:replace="~{footer.html :: footerFragment}"></div>
+  </body>
+</html>

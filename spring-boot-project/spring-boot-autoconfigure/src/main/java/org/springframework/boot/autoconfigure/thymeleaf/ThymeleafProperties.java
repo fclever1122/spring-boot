@@ -39,76 +39,75 @@ public class ThymeleafProperties {
 
 	private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
+	// 资源查找路径-前缀
 	public static final String DEFAULT_PREFIX = "classpath:/templates/";
 
+	// 资源查找路径-后缀
 	public static final String DEFAULT_SUFFIX = ".html";
 
 	/**
-	 * Whether to check that the template exists before rendering it.
+	 * 渲染前是否检查模板是否存在
 	 */
 	private boolean checkTemplate = true;
 
 	/**
-	 * Whether to check that the templates location exists.
+	 * 是否检查模板位置是否存在.
 	 */
 	private boolean checkTemplateLocation = true;
 
 	/**
-	 * Prefix that gets prepended to view names when building a URL.
+	 * 在构建 URL 时添加到查看名称的前缀
 	 */
 	private String prefix = DEFAULT_PREFIX;
 
 	/**
-	 * Suffix that gets appended to view names when building a URL.
+	 * 构建 URL 时附加到视图名称的后缀
 	 */
 	private String suffix = DEFAULT_SUFFIX;
 
 	/**
-	 * Template mode to be applied to templates. See also Thymeleaf's TemplateMode enum.
+	 * 要应用于模板的模板模式。另见 Thymeleaf 的 TemplateMode 枚举
 	 */
 	private String mode = "HTML";
 
 	/**
-	 * Template files encoding.
+	 * 模板文件编码。
 	 */
 	private Charset encoding = DEFAULT_ENCODING;
 
 	/**
-	 * Whether to enable template caching.
+	 * 是否启用模板缓存。
 	 */
 	private boolean cache = true;
 
 	/**
-	 * Order of the template resolver in the chain. By default, the template resolver is
-	 * first in the chain. Order start at 1 and should only be set if you have defined
-	 * additional "TemplateResolver" beans.
+	 * 在模板解析器链中的顺序。默认选用的模板解析器是链中的第一个。
+	 * Order 从 1 开始，只有在定义了额外的“TemplateResolver”bean 时才应设置。
 	 */
 	private Integer templateResolverOrder;
 
 	/**
-	 * Comma-separated list of view names (patterns allowed) that can be resolved.
+	 * 可以解析的以逗号分隔的视图名称列表（允许模式）。
 	 */
 	private String[] viewNames;
 
 	/**
-	 * Comma-separated list of view names (patterns allowed) that should be excluded from
-	 * resolution.
+	 * 应从解析中排除的以逗号分隔的视图名称列表（允许模式）。
 	 */
 	private String[] excludedViewNames;
 
 	/**
-	 * Enable the SpringEL compiler in SpringEL expressions.
+	 * 在 SpringEL 表达式中启用 SpringEL 编译器。
 	 */
 	private boolean enableSpringElCompiler;
 
 	/**
-	 * Whether hidden form inputs acting as markers for checkboxes should be rendered
-	 * before the checkbox element itself.
+	 * 作为复选框标记的隐藏表单输入是否应该在复选框元素本身之前呈现。
 	 */
 	private boolean renderHiddenMarkersBeforeCheckboxes = false;
 
 	/**
-	 * Whether to enable Thymeleaf view resolution for Web frameworks.
+	 * 是否为 Web 框架启用 Thymeleaf 视图解析。
 	 */
 	private boolean enabled = true;
 

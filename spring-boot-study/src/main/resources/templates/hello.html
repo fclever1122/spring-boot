@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--
+    因为我们使用的形如th:*格式的属性是不标准的，这些属性不属于HTML5标准
+
+    所以需要添加一下xmlns:th
+    添加了这个属性以后其实对模板处理不会带来任何影响，
+    但是可以阻止我们的IDE因为th:*属性缺少命名空间的声明而一直报错
+
+    如果我们希望这个模板是满足HTML5标准的话该怎么办呢？
+    很简单：转变为Thymeleaf的数据属性语法，在属性上使用data-前缀，使用-而不是:做分隔符。
+    如：data-th-text 使用data-作为前缀的自定义属性是符合HTML5标准，但是data-标注法只能用于HTML模式。
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    消息：<p th:text="${msg}"></p>
+</body>
+</html>

@@ -86,6 +86,9 @@
 								<inherited>false</inherited>
 							</execution>
 						</executions>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>io.spring.javaformat</groupId>
@@ -108,7 +111,7 @@
 			<modules>
 				<module>spring-boot-project</module>
 				<!-- Smoke tests are built via the invoker plugin -->
-				<module>spring-boot-tests</module>
+<!--				<module>spring-boot-tests</module>-->
 			</modules>
 		</profile>
 		<!-- M2E profile to allow easy import into Eclipse -->

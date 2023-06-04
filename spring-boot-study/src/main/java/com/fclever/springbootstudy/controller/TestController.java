@@ -52,4 +52,9 @@ public class TestController {
 	public String bae() {
 		return "base";
 	}
+
+	@RequestMapping("login")
+	public String login() {
+		return "login";
+	}
 }

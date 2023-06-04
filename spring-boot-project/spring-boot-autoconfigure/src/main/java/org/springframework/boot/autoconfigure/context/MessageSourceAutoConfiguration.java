@@ -59,12 +59,26 @@ public class MessageSourceAutoConfiguration {
 
 	private static final Resource[] NO_RESOURCES = {};
 
+	/**
+	 * 定义一个名为 messageSourceProperties 的 Bean，
+	 * 并使用 @ConfigurationProperties 注解将前缀为 spring.messages 的配置属性绑定到该 Bean。
+	 * MessageSourceProperties 类是用于封装消息源相关的配置属性
+	 * @return
+	 */
 	@Bean
 	@ConfigurationProperties(prefix = "spring.messages")
 	public MessageSourceProperties messageSourceProperties() {
 		return new MessageSourceProperties();
 	}
 
+	/**
+	 *  定义一个名为 messageSource 的 Bean，并注入前面定义的 messageSourceProperties Bean。
+	 *  在方法中创建一个 ResourceBundleMessageSource 的实例，
+	 *  用于实现基于属性文件的消息源。根据 messageSourceProperties 中的配置，设置相应的属性值，
+	 *  如基本名称（basenames）、编码（encoding）、是否使用系统区域设置（fallbackToSystemLocale）、缓存时长（cacheDuration）等。
+	 * @param properties
+	 * @return
+	 */
 	@Bean
 	public MessageSource messageSource(MessageSourceProperties properties) {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -85,10 +99,21 @@ public class MessageSourceAutoConfiguration {
 		return messageSource;
 	}
 
+	/**
+	 * 条件类，用于判断是否满足加载资源绑定的条件
+	 */
 	protected static class ResourceBundleCondition extends SpringBootCondition {
 
 		private static ConcurrentReferenceHashMap<String, ConditionOutcome> cache = new ConcurrentReferenceHashMap<>();
 
+		/**
+		 * 在该方法中，通过读取配置的 spring.messages.basename 属性值来确定基本名称（basename），
+		 * 如果配置值不存在，则默认为 "messages"。然后，遍历基本名称列表，尝试获取资源（properties 文件）并判断资源是否存在。
+		 * 根据是否存在资源来确定是否满足加载资源绑定的条件。
+		 * @param context the condition context
+		 * @param metadata the annotation metadata
+		 * @return
+		 */
 		@Override
 		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 			String basename = context.getEnvironment().getProperty("spring.messages.basename", "messages");
@@ -112,6 +137,12 @@ public class MessageSourceAutoConfiguration {
 			return ConditionOutcome.noMatch(message.didNotFind("bundle with basename " + basename).atAll());
 		}
 
+		/**
+		 * 根据给定的类加载器和基本名称，获取对应的资源（properties 文件）数组。
+		 * @param classLoader
+		 * @param name
+		 * @return
+		 */
 		private Resource[] getResources(ClassLoader classLoader, String name) {
 			String target = name.replace('.', '/');
 			try {

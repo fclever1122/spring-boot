@@ -1,17 +1,16 @@
-package com.fclever.springbootstudy.controller;
+package com.fclever.springbootstudy.part1.controller;
 
-import com.fclever.springbootstudy.controller.entity.Person;
+import com.fclever.springbootstudy.part1.controller.entity.Person;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Description
  * Copyright ©fclever 版权所有
  *
- * @packageName: com.fclever.springbootstudy.controller
+ * @packageName: com.fclever.springbootstudy.part1.controller
  * @className: TestController
  * @description:
  * @author: Fclever

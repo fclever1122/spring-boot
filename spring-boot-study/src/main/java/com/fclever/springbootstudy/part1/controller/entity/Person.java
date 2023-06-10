@@ -1,10 +1,10 @@
-package com.fclever.springbootstudy.controller.entity;
+package com.fclever.springbootstudy.part1.controller.entity;
 
 /**
  * Description
  * Copyright ©fclever 版权所有
  *
- * @packageName: com.fclever.springbootstudy.controller.entity
+ * @packageName: com.fclever.springbootstudy.part1.controller.entity
  * @className: Person
  * @description:
  * @author: Fclever

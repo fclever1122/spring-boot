@@ -1,4 +1,4 @@
-package com.fclever.springbootstudy.controller.viewresolver;
+package com.fclever.springbootstudy.part1.controller.viewresolver;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ViewResolver;
  * Description
  * Copyright ©fclever 版权所有
  *
- * @packageName: com.fclever.springbootstudy.controller.viewresolver
+ * @packageName: com.fclever.springbootstudy.part1.controller.viewresolver
  * @className: ViewConfig
  * @description:	注册自定义视图解析器为bean，可以被ioc接管
  * @author: Fclever

@@ -1,4 +1,4 @@
-package com.fclever.springbootstudy.controller.config;
+package com.fclever.springbootstudy.part1.controller.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import java.util.Locale;
  * Description
  * Copyright ©fclever 版权所有
  *
- * @packageName: com.fclever.springbootstudy.controller.config
+ * @packageName: com.fclever.springbootstudy.part1.controller.config
  * @className: MyConfig
  * @description:
  * @author: Fclever

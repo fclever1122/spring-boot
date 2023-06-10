@@ -1,4 +1,4 @@
-package com.fclever.springbootstudy.controller.viewresolver;
+package com.fclever.springbootstudy.part1.controller.viewresolver;
 
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -9,7 +9,7 @@ import java.util.Locale;
  * Description
  * Copyright ©fclever 版权所有
  *
- * @packageName: com.fclever.springbootstudy.controller.viewresolver
+ * @packageName: com.fclever.springbootstudy.part1.controller.viewresolver
  * @className: MyViewResolver
  * @description:	自定义视图解析器
  * @author: Fclever

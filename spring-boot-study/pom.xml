@@ -55,6 +55,16 @@
 			<version>1.2.17</version>
 		</dependency>
 		<!--数据源结束-->
+		<!--aop开始-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+		<!--aop结束-->
 	</dependencies>
 
 	<build>

@@ -52,3 +52,18 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+# 使用---分隔符，您可以将配置按照不同的部分进行组织和管理
+# 多数据源测试
+---
+spring:
+  datasource:
+    local:
+      username: root
+      password: X5&g$qA8#2mN@9sJy3*6pR$1zT!0vFbC
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://124.222.255.129:3306/datasource?serverTimezone=UTC&useUnicode=true@characterEncoding=utf-8
+    remote:
+      username: root
+      password: X5&g$qA8#2mN@9sJy3*6pR$1zT!0vFbC
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://124.222.255.129:3307/datasource?serverTimezone=UTC&useUnicode=true@characterEncoding=utf-8

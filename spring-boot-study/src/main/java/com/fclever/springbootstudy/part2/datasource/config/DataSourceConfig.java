@@ -2,11 +2,9 @@ package com.fclever.springbootstudy.part2.datasource.config;
 
 import com.fclever.springbootstudy.part2.datasource.mult.DataSourceType;
 import com.fclever.springbootstudy.part2.datasource.mult.DynamicDataSource;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.*;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -27,6 +25,7 @@ public class DataSourceConfig {
 
 	/**
 	 * 通过配置信息注入Bean  指定对应前缀
+	 *  方法名自动作为Bean名称
 	 * @return
 	 */
 	@Bean
@@ -37,6 +36,7 @@ public class DataSourceConfig {
 
 	/**
 	 * 通过配置信息注入Bean  指定对应前缀
+	 * 	方法名自动作为Bean名称
 	 *
 	 * 当名为 spring.datasource.local.enabled 的属性存在并且值为 true 时，相关的 Bean 才会被装配。
 	 * @return

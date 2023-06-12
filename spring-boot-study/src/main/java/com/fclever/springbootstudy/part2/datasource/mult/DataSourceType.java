@@ -11,7 +11,6 @@ package com.fclever.springbootstudy.part2.datasource.mult;
  * @date 2023/6/10 19:46
  **/
 public enum DataSourceType {
-
 	REMOTE,
 	LOCAL
 }

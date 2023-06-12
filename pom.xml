@@ -110,6 +110,7 @@
 			</build>
 			<modules>
 				<module>spring-boot-project</module>
+				<module>spring-boot-study</module>
 				<!-- Smoke tests are built via the invoker plugin -->
 <!--				<module>spring-boot-tests</module>-->
 			</modules>

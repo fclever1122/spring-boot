@@ -30,4 +30,14 @@ class SpringBootStudyApplicationTests {
 		connection.close();
 		System.out.println("------------------------");
 	}
+
+	@Test
+	void contextLoads1() throws SQLException {
+		System.out.println(dataSource.getClass());
+		Connection connection = dataSource.getConnection();
+		System.out.println(connection);
+		System.out.println(connection.getMetaData().getURL());
+
+		connection.close();
+	}
 }

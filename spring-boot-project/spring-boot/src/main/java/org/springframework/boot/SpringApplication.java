@@ -263,21 +263,42 @@ public class SpringApplication {
 	 * @see #run(Class, String[])
 	 * @see #setSources(Set)
 	 */
+	/**
+	 * 创建一个新的实例，这个应用程序的上下文将要从指定的来源加载Bean
+	 * @param resourceLoader
+	 * @param primarySources
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
+		// 资源初始化资源加载器，默认为null
 		this.resourceLoader = resourceLoader;
+		// 断言主要加载资源类不能为 null，否则报错
 		Assert.notNull(primarySources, "PrimarySources must not be null");
+		// 初始化主要加载资源类集合并去重
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+		// 推断当前 WEB 应用类型，一共有三种：NONE,SERVLET,REACTIVE
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
+		// 设置应用上下文初始化器,从"META-INF/spring.factories"读取ApplicationContextInitializer类的实例名称集合并去重，并进行set去重。（一共7个）
+		// ApplicationContextInitializer工厂类实现类的实例化，并设置到initializers变量中
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+		// 设置监听器,从"META-INF/spring.factories"读取ApplicationListener类的实例名称集合并去重，并进行set去重。（一共11个）
+		// ApplicationListener监听器工厂类实现类的实例化，并设置到listeners变量中
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		// 推断主入口应用类，通过当前调用栈，获取Main方法所在类，并赋值给mainApplicationClass
+		// 保存当前应用程序主类的class，找到main函数所在的全类名
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
+	/**
+	 * 寻找主程序的全类名，根据main方法来判断
+	 * @return
+	 */
 	private Class<?> deduceMainApplicationClass() {
 		try {
+			// 堆栈信息
 			StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
 			for (StackTraceElement stackTraceElement : stackTrace) {
+				// 找到main方法对应的方法
 				if ("main".equals(stackTraceElement.getMethodName())) {
 					return Class.forName(stackTraceElement.getClassName());
 				}
@@ -422,22 +443,28 @@ public class SpringApplication {
 
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
 		ClassLoader classLoader = getClassLoader();
-		// Use names and ensure unique to protect against duplicates
+		// 使用名称并确保唯一性以防止重复
 		Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
+		// 实例化工厂实现类
 		List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
 		AnnotationAwareOrderComparator.sort(instances);
 		return instances;
 	}
 
+	/**
+	 * 实例化工厂实现类
+	 */
 	@SuppressWarnings("unchecked")
 	private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes,
 			ClassLoader classLoader, Object[] args, Set<String> names) {
 		List<T> instances = new ArrayList<>(names.size());
 		for (String name : names) {
 			try {
+				// 反射获取class对象
 				Class<?> instanceClass = ClassUtils.forName(name, classLoader);
 				Assert.isAssignable(type, instanceClass);
 				Constructor<?> constructor = instanceClass.getDeclaredConstructor(parameterTypes);
+				// 实例化
 				T instance = (T) BeanUtils.instantiateClass(constructor, args);
 				instances.add(instance);
 			}

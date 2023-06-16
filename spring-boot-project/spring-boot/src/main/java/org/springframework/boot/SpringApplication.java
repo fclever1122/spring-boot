@@ -366,7 +366,7 @@ public class SpringApplication {
 			if (this.logStartupInfo) {
 				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), stopWatch);
 			}
-			//15、发布应用上下文启动监听事件
+			//15、发布应用上下文已启动的监听事件
 			listeners.started(context);
 			//16、执行所有的Runner运行器
 			callRunners(context, applicationArguments);
@@ -872,6 +872,7 @@ public class SpringApplication {
 	}
 
 	/**
+	 * 上下文刷新之后的一些调用
 	 * Called after the context has been refreshed.
 	 * @param context the application context
 	 * @param args the application arguments

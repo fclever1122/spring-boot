@@ -28,6 +28,7 @@ import org.springframework.util.ReflectionUtils;
 
 /**
  * A collection of {@link SpringApplicationRunListener}.
+ * SpringApplicationRunListener的集合
  *
  * @author Phillip Webb
  */
@@ -43,12 +44,14 @@ class SpringApplicationRunListeners {
 	}
 
 	void starting() {
+		// 遍历所有listeners，并进行启动
 		for (SpringApplicationRunListener listener : this.listeners) {
 			listener.starting();
 		}
 	}
 
 	void environmentPrepared(ConfigurableEnvironment environment) {
+		// 只有一个EventPublishingRunListener
 		for (SpringApplicationRunListener listener : this.listeners) {
 			listener.environmentPrepared(environment);
 		}

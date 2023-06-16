@@ -25,7 +25,7 @@ import org.springframework.core.env.Environment;
 
 /**
  * Default Banner implementation which writes the 'Spring' banner.
- *
+ * SpringBanner 默认实现
  * @author Phillip Webb
  */
 class SpringBootBanner implements Banner {
@@ -44,9 +44,11 @@ class SpringBootBanner implements Banner {
 		for (String line : BANNER) {
 			printStream.println(line);
 		}
+		// 版本信息
 		String version = SpringBootVersion.getVersion();
 		version = (version != null) ? " (v" + version + ")" : "";
 		StringBuilder padding = new StringBuilder();
+		// 凑长度了，一行需要42个字符，减去版本信息后，需要空字符填充
 		while (padding.length() < STRAP_LINE_SIZE - (version.length() + SPRING_BOOT.length())) {
 			padding.append(" ");
 		}

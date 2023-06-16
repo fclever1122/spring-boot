@@ -172,6 +172,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
+		// ApplicationEnvironmentPreparedEvent
 		if (event instanceof ApplicationEnvironmentPreparedEvent) {
 			onApplicationEnvironmentPreparedEvent((ApplicationEnvironmentPreparedEvent) event);
 		}
@@ -190,9 +191,15 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 	}
 
 	List<EnvironmentPostProcessor> loadPostProcessors() {
+		// spring.factories 查找EnvironmentPostProcessor对应的实现类
 		return SpringFactoriesLoader.loadFactories(EnvironmentPostProcessor.class, getClass().getClassLoader());
 	}
 
+	/**
+	 * 加载properties和yaml
+	 * @param environment the environment to post-process
+	 * @param application the application to which the environment belongs
+	 */
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 		addPropertySources(environment, application.getResourceLoader());
@@ -204,21 +211,26 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 	}
 
 	/**
+	 * 将配置文件添加到指定环境中
 	 * Add config file property sources to the specified environment.
 	 * @param environment the environment to add source to
 	 * @param resourceLoader the resource loader
 	 * @see #addPostProcessors(ConfigurableApplicationContext)
 	 */
 	protected void addPropertySources(ConfigurableEnvironment environment, ResourceLoader resourceLoader) {
+		// 增加Random的支持，在properties和yaml中可以使用类似${random.int}这样的方式生成值
 		RandomValuePropertySource.addToEnvironment(environment);
+		// Loader构造方法中会加载能够处理application配置文件的Loader，调用load方法后，会读取配置文件中的信息到environment
 		new Loader(environment, resourceLoader).load();
 	}
 
 	/**
 	 * Add appropriate post-processors to post-configure the property-sources.
+	 * 添加适当的后处理器以对属性源进行后配置。
 	 * @param context the context to configure
 	 */
 	protected void addPostProcessors(ConfigurableApplicationContext context) {
+		// 排序属性资源
 		context.addBeanFactoryPostProcessor(new PropertySourceOrderingPostProcessor(context));
 	}
 
@@ -315,6 +327,9 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 			this.environment = environment;
 			this.placeholdersResolver = new PropertySourcesPlaceholdersResolver(this.environment);
 			this.resourceLoader = (resourceLoader != null) ? resourceLoader : new DefaultResourceLoader();
+			// 从spring.factories 查找PropertySourceLoader，两个PropertiesPropertySourceLoader、YamlPropertySourceLoader
+			// 获取加载properties和yaml配置文件的PropertySourceLoader的实现类
+			// PropertiesPropertySourceLoader  YamlPropertySourceLoader
 			this.propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class,
 					getClass().getClassLoader());
 		}

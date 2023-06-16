@@ -214,9 +214,14 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 		return false;
 	}
 
+	/**
+	 * 不同类型的事件，日志系统有不同的处理方式
+	 * @param event the event to respond to
+	 */
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof ApplicationStartingEvent) {
+			// ApplicationStartingEvent
 			onApplicationStartingEvent((ApplicationStartingEvent) event);
 		}
 		else if (event instanceof ApplicationEnvironmentPreparedEvent) {
@@ -234,6 +239,10 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 		}
 	}
 
+	/**
+	 * 完善日志系统，启动监听事件
+	 * @param event
+	 */
 	private void onApplicationStartingEvent(ApplicationStartingEvent event) {
 		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
 		this.loggingSystem.beforeInitialize();
@@ -248,12 +257,14 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 
 	private void onApplicationPreparedEvent(ApplicationPreparedEvent event) {
 		ConfigurableListableBeanFactory beanFactory = event.getApplicationContext().getBeanFactory();
+		// 注册日志系统的Bean
 		if (!beanFactory.containsBean(LOGGING_SYSTEM_BEAN_NAME)) {
 			beanFactory.registerSingleton(LOGGING_SYSTEM_BEAN_NAME, this.loggingSystem);
 		}
 		if (this.logFile != null && !beanFactory.containsBean(LOG_FILE_BEAN_NAME)) {
 			beanFactory.registerSingleton(LOG_FILE_BEAN_NAME, this.logFile);
 		}
+		// 注册日志组相关bean
 		if (this.loggerGroups != null && !beanFactory.containsBean(LOGGER_GROUPS_BEAN_NAME)) {
 			beanFactory.registerSingleton(LOGGER_GROUPS_BEAN_NAME, this.loggerGroups);
 		}

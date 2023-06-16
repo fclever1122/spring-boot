@@ -65,12 +65,15 @@ public class AnnotationConfigServletWebServerApplicationContext extends ServletW
 	private String[] basePackages;
 
 	/**
+	 * 创建，需要被register调用然后手动刷新
 	 * Create a new {@link AnnotationConfigServletWebServerApplicationContext} that needs
 	 * to be populated through {@link #register} calls and then manually
 	 * {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigServletWebServerApplicationContext() {
+		// bean的注册
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		// 扫描   如@Controller、@Service、@Repository等
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 

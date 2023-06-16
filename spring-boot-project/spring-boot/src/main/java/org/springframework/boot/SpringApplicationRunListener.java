@@ -28,6 +28,12 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * instance and a {@code String[]} of arguments. A new
  * {@link SpringApplicationRunListener} instance will be created for each run.
  *
+ * SpringApplication run方法的监听器
+ * SpringApplicationRunListener是通过SpringFactoriesLoader加载的，并且应该声明一个
+ * 公共的能接受一个SpringApplication实例和String[]数组参数的构造器。
+ * 每次运行都会创建一个新的SpringApplicationRunListener实例
+ * 		该接口的实现类EventPublishingRunListener就含有符合这种要求的构造器
+ *
  * @author Phillip Webb
  * @author Dave Syer
  * @author Andy Wilkinson

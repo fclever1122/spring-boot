@@ -67,25 +67,32 @@ class SpringApplicationBannerPrinter {
 	}
 
 	Banner print(Environment environment, Class<?> sourceClass, PrintStream out) {
+		/// 获取banner对象
 		Banner banner = getBanner(environment);
+		// 实际打印Banner信息
 		banner.printBanner(environment, sourceClass, out);
 		return new PrintedBanner(banner, sourceClass);
 	}
 
 	private Banner getBanner(Environment environment) {
 		Banners banners = new Banners();
+		// 获取图像banner
 		banners.addIfNotNull(getImageBanner(environment));
+		// 获取文本banner
 		banners.addIfNotNull(getTextBanner(environment));
+		// 至少有一个banner就返回
 		if (banners.hasAtLeastOneBanner()) {
 			return banners;
 		}
 		if (this.fallbackBanner != null) {
 			return this.fallbackBanner;
 		}
+		// 没有任何自定义设置，就返回默认banner
 		return DEFAULT_BANNER;
 	}
 
 	private Banner getTextBanner(Environment environment) {
+		// 读取spring.banner.location配置，找不到就寻找banner.txt
 		String location = environment.getProperty(BANNER_LOCATION_PROPERTY, DEFAULT_BANNER_LOCATION);
 		Resource resource = this.resourceLoader.getResource(location);
 		if (resource.exists()) {
@@ -95,11 +102,13 @@ class SpringApplicationBannerPrinter {
 	}
 
 	private Banner getImageBanner(Environment environment) {
+		// 读取spring.banner.image.location配置属性，配置的是图片banner的位置
 		String location = environment.getProperty(BANNER_IMAGE_LOCATION_PROPERTY);
 		if (StringUtils.hasLength(location)) {
 			Resource resource = this.resourceLoader.getResource(location);
 			return resource.exists() ? new ImageBanner(resource) : null;
 		}
+		// 如果没有自定义配置，就根据扩展名去查找名为banner的文件
 		for (String ext : IMAGE_EXTENSION) {
 			Resource resource = this.resourceLoader.getResource("banner." + ext);
 			if (resource.exists()) {

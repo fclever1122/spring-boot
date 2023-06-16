@@ -70,6 +70,7 @@ public final class ConfigurationPropertySources {
 	 */
 	public static void attach(Environment environment) {
 		Assert.isInstanceOf(ConfigurableEnvironment.class, environment);
+		// 获取到环境中配置的PropertySource信息对象，并将configurationProperties添加进去
 		MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
 		PropertySource<?> attached = sources.get(ATTACHED_PROPERTY_SOURCE_NAME);
 		if (attached != null && attached.getSource() != sources) {

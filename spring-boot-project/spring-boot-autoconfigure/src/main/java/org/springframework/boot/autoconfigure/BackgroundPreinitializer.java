@@ -91,10 +91,15 @@ public class BackgroundPreinitializer implements ApplicationListener<SpringAppli
 
 				@Override
 				public void run() {
+					// 转换服务初始化
 					runSafely(new ConversionServiceInitializer());
+					// 校验服务初始化
 					runSafely(new ValidationInitializer());
+					// 消息转换初始化
 					runSafely(new MessageConverterInitializer());
+					// Jackson初始化
 					runSafely(new JacksonInitializer());
+					// 编码初始化
 					runSafely(new CharsetInitializer());
 					preinitializationComplete.countDown();
 				}

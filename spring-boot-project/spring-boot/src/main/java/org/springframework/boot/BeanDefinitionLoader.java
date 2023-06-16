@@ -131,6 +131,7 @@ class BeanDefinitionLoader {
 	}
 
 	private int load(Object source) {
+		// 根据资源的类型不同来执行不同的load方法
 		Assert.notNull(source, "Source must not be null");
 		if (source instanceof Class<?>) {
 			return load((Class<?>) source);
@@ -153,6 +154,14 @@ class BeanDefinitionLoader {
 			GroovyBeanDefinitionSource loader = BeanUtils.instantiateClass(source, GroovyBeanDefinitionSource.class);
 			load(loader);
 		}
+		/*
+		 判断source是否包含Component组件信息
+		 	当前source是SpringBoot启动时的主类，即使用@SpringBootApplication修饰的类
+
+		 	@SpringBootApplication-@SpringBootConfiguration--@Configuration--@Component
+
+		 	这样就可以找到了
+		 */
 		if (isComponent(source)) {
 			this.annotatedReader.register(source);
 			return 1;
@@ -276,6 +285,10 @@ class BeanDefinitionLoader {
 	private boolean isComponent(Class<?> type) {
 		// This has to be a bit of a guess. The only way to be sure that this type is
 		// eligible is to make a bean definition out of it and try to instantiate it.
+		/*
+		 根据指定的搜索策略，去判断，搜索策略是用来限制搜索指定类的关联范围
+		 	SearchStrategy.TYPE_HIERARCHY：对整个类型层次结构执行完整搜索，包括超类和已实现的接口。
+		 */
 		if (MergedAnnotations.from(type, SearchStrategy.TYPE_HIERARCHY).isPresent(Component.class)) {
 			return true;
 		}

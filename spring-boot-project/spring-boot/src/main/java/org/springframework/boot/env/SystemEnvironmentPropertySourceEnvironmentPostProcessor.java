@@ -49,6 +49,7 @@ public class SystemEnvironmentPropertySourceEnvironmentPostProcessor implements 
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 		String sourceName = StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME;
+		// 从PropertySource中查找systemEnvironment对应的数据，如果存在，就替换为新的内容
 		PropertySource<?> propertySource = environment.getPropertySources().get(sourceName);
 		if (propertySource != null) {
 			replacePropertySource(environment, sourceName, propertySource);

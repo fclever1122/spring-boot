@@ -430,6 +430,7 @@ public class SpringApplication {
 		/*
 		 （非常重要）为上下文应用所有初始化器，刷新之前，将ApplicationContextInitializer应用到上下文中，有7个
 		 	注册到Context中的beanFactoryPostProcessor\applicationListener等
+		 	注册到beanFactoryPostProcessor中两个Processor
 		 */
 		applyInitializers(context);
 		/*
@@ -740,6 +741,10 @@ public class SpringApplication {
 			ApplicationContextInitializer的实现类
 		 含有7个，重点关注：SharedMetadataReaderFactoryContextInitializer、
 			ConfigurationWarningsApplicationContextInitializer
+
+			执行initialize方法时，会将SharedMetadataReaderFactoryContextInitializer$CachingMetadataReaderFactoryPostProcessor、
+				ConfigurationWarningsApplicationContextInitializer$ConfigurationWarningsPostProcessor
+				添加到context的beanFactoryPostProcessors中
 		 */
 		for (ApplicationContextInitializer initializer : getInitializers()) {
 			Class<?> requiredType = GenericTypeResolver.resolveTypeArgument(initializer.getClass(),
@@ -812,6 +817,7 @@ public class SpringApplication {
 		if (this.environment != null) {
 			loader.setEnvironment(this.environment);
 		}
+		// 加载主类，注册为Bean
 		loader.load();
 	}
 

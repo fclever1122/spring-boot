@@ -134,6 +134,7 @@ class BeanDefinitionLoader {
 		// 根据资源的类型不同来执行不同的load方法
 		Assert.notNull(source, "Source must not be null");
 		if (source instanceof Class<?>) {
+			// SpringBoot启动类属于class
 			return load((Class<?>) source);
 		}
 		if (source instanceof Resource) {
@@ -163,6 +164,7 @@ class BeanDefinitionLoader {
 		 	这样就可以找到了
 		 */
 		if (isComponent(source)) {
+			// 执行注册主类
 			this.annotatedReader.register(source);
 			return 1;
 		}

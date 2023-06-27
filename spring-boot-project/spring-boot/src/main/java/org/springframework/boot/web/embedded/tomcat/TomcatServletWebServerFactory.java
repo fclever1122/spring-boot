@@ -174,20 +174,29 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		if (this.disableMBeanRegistry) {
 			Registry.disableRegistry();
 		}
+		/*
+			server->service->connector
+						   ->container->engine->host->context
+			这里是对Tomcat对象的各种配置，以及Tomcat内部各个组件的配置及关联关系的配置
+		 */
 		Tomcat tomcat = new Tomcat();
 		File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir("tomcat");
 		tomcat.setBaseDir(baseDir.getAbsolutePath());
-		Connector connector = new Connector(this.protocol);
+		Connector connector = new Connector(this.protocol);// http1.1
 		connector.setThrowOnFailure(true);
+		// getService中也会创建server对象
 		tomcat.getService().addConnector(connector);
 		customizeConnector(connector);
 		tomcat.setConnector(connector);
+		// 会创建Engine对象
 		tomcat.getHost().setAutoDeploy(false);
 		configureEngine(tomcat.getEngine());
 		for (Connector additionalConnector : this.additionalTomcatConnectors) {
 			tomcat.getService().addConnector(additionalConnector);
 		}
+		//准备TomcatEmbeddedContext并设置到tomcat中
 		prepareContext(tomcat.getHost(), initializers);
+		//构建tomcatWebServer
 		return getTomcatWebServer(tomcat);
 	}
 

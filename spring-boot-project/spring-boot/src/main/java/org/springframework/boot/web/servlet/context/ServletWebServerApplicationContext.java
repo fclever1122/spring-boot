@@ -148,8 +148,10 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 
 	@Override
 	protected void onRefresh() {
+		// 创建主题对象
 		super.onRefresh();
 		try {
+			// 创建web服务
 			createWebServer();
 		}
 		catch (Throwable ex) {
@@ -176,7 +178,9 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		WebServer webServer = this.webServer;
 		ServletContext servletContext = getServletContext();
 		if (webServer == null && servletContext == null) {
+			// TomcatServletWebServerFactory  获取servletWebServerFactory,从上下文注册bean中可以找到
 			ServletWebServerFactory factory = getWebServerFactory();
+			//获取servletContextInitializer,获取webServer
 			this.webServer = factory.getWebServer(getSelfInitializer());
 		}
 		else if (servletContext != null) {
@@ -187,7 +191,8 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 				throw new ApplicationContextException("Cannot initialize servlet context", ex);
 			}
 		}
-		initPropertySources();
+		//替换servlet相关的属性资源
+ 		initPropertySources();
 	}
 
 	/**
@@ -217,11 +222,15 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	 * @see #prepareWebApplicationContext(ServletContext)
 	 */
 	private org.springframework.boot.web.servlet.ServletContextInitializer getSelfInitializer() {
+		// 将方法引用传递给其他方法或函数，以便在合适的时候调用该方法
+		// lambda表达式
 		return this::selfInitialize;
 	}
 
 	private void selfInitialize(ServletContext servletContext) throws ServletException {
+		//使用给定的完全加载的servletContext准备WebApplicationContext
 		prepareWebApplicationContext(servletContext);
+		//使用给定的BeanFactory注册特定于web的作用域bean（contextParameters,contextAttributes）
 		registerApplicationScope(servletContext);
 		WebApplicationContextUtils.registerEnvironmentBeans(getBeanFactory(), servletContext);
 		for (ServletContextInitializer beans : getServletContextInitializerBeans()) {

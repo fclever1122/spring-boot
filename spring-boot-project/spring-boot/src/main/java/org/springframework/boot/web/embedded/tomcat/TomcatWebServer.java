@@ -85,10 +85,12 @@ public class TomcatWebServer implements WebServer {
 		Assert.notNull(tomcat, "Tomcat Server must not be null");
 		this.tomcat = tomcat;
 		this.autoStart = autoStart;
+		// 初始化
 		initialize();
 	}
 
 	private void initialize() throws WebServerException {
+		// 打印Tomcat初始化完成的信息
 		logger.info("Tomcat initialized with port(s): " + getPortsDescription(false));
 		synchronized (this.monitor) {
 			try {
@@ -99,14 +101,17 @@ public class TomcatWebServer implements WebServer {
 					if (context.equals(event.getSource()) && Lifecycle.START_EVENT.equals(event.getType())) {
 						// Remove service connectors so that protocol binding doesn't
 						// happen when the service is started.
+						// 删除服务连接器，以便在服务启动时不会发生协议绑定
 						removeServiceConnectors();
 					}
 				});
 
 				// Start the server to trigger initialization listeners
+				// 启动服务器触发初始化监听器
 				this.tomcat.start();
 
 				// We can re-throw failure exception directly in the main thread
+				// 在主线程中重新抛出失败异常
 				rethrowDeferredStartupExceptions();
 
 				try {
@@ -118,9 +123,11 @@ public class TomcatWebServer implements WebServer {
 
 				// Unlike Jetty, all Tomcat threads are daemon threads. We create a
 				// blocking non-daemon to stop immediate shutdown
+				//所有的tomcat线程都是守护线程，我们创建一个阻塞非守护线程来避免立即关闭
 				startDaemonAwaitThread();
 			}
 			catch (Exception ex) {
+				//异常停止tomcat
 				stopSilently();
 				destroySilently();
 				throw new WebServerException("Unable to start embedded Tomcat", ex);
